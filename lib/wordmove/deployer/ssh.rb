@@ -36,8 +36,9 @@ module Wordmove
 
         download_remote_db(local_gzipped_dump_path)
         run uncompress_command(local_gzipped_dump_path)
-        adapt_sql(local_dump_path, remote_options, local_options)
         run mysql_import_command(local_dump_path, local_options[:database])
+        run adapt_sql_command(local_dump_path, remote_options, local_options, :vhost)
+        run adapt_sql_command(local_dump_path, remote_options, local_options, :wordpress_path)
         local_delete(local_dump_path)
       end
 

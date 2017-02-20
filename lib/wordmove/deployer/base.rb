@@ -162,10 +162,10 @@ module Wordmove
         end
       end
 
-      def adapt_sql(save_to_path, local, remote)
+      def adapt_sql_command(save_to_path, local, remote, config_key)
         unless options[:no_adapt]
           logger.task_step true, "adapt dump"
-          SqlAdapter.new(save_to_path, local, remote).adapt! unless simulate?
+          SqlAdapter.new(save_to_path, local, remote, config_key).command unless simulate?
         end
       end
 
