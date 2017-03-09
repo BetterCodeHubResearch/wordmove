@@ -18,9 +18,10 @@ module Wordmove
         download_remote_db(local_gzipped_backup_path)
 
         save_local_db(local_dump_path)
-        adapt_sql(local_dump_path, local_options, remote_options)
         run compress_command(local_dump_path)
         import_remote_dump(local_gzipped_dump_path)
+        run adapt_sql_command(local_dump_path, local_options, remote_options, :vhost)
+        run adapt_sql_command(local_dump_path, local_options, remote_options, :wordpress_path)
         local_delete(local_gzipped_dump_path)
       end
 
