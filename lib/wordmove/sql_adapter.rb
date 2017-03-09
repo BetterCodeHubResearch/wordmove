@@ -15,7 +15,7 @@ module Wordmove
       if config_key.present?
         origin = source_config[config_key]
         destination = dest_config[config_key]
-        wp_command = "wp search-replace #{origin} #{destination} --all-tables"
+        wp_command = "wp search-replace #{origin} #{destination} --all-tables --quiet"
       end
       wp_command
     end
