@@ -2,11 +2,13 @@ describe Wordmove::SqlAdapter do
   let(:sql_path) { double }
   let(:source_config) { double }
   let(:dest_config) { double }
+  let(:config_key) { double }
   let(:adapter) do
     Wordmove::SqlAdapter.new(
       sql_path,
       source_config,
-      dest_config
+      dest_config,
+      config_key
     )
   end
 
@@ -15,6 +17,7 @@ describe Wordmove::SqlAdapter do
       expect(adapter.sql_path).to eq(sql_path)
       expect(adapter.source_config).to eq(source_config)
       expect(adapter.dest_config).to eq(dest_config)
+      expect(adapter.config_key).to eq(config_key)
     end
   end
 

@@ -162,10 +162,10 @@ module Wordmove
         end
       end
 
-      def adapt_sql_command(save_to_path, local, remote, config_key)
+      def adapt_sql_command(local, remote, config_key)
         unless options[:no_adapt]
-          logger.task_step true, "adapt dump"
-          SqlAdapter.new(save_to_path, local, remote, config_key).command unless simulate?
+          logger.task_step true, "adapt dump for #{config_key}"
+          SqlAdapter.new(local, remote, config_key).command unless simulate?
         end
       end
 
@@ -209,7 +209,6 @@ module Wordmove
         command << "--best"
         command << "--force"
         command << "\"#{path}\""
-        puts command.join(" ")
         command.join(" ")
       end
 
@@ -218,7 +217,6 @@ module Wordmove
         command << "-d"
         command << "--force"
         command << "\"#{path}\""
-        puts command.join(" ")
         command.join(" ")
       end
 

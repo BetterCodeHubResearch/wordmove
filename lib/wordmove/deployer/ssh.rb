@@ -15,24 +15,27 @@ module Wordmove
         local_gzipped_backup_path = local_wp_content_dir
                                     .path("#{environment}-backup-#{Time.now.to_i}.sql.gz")
 
+        # Backup remote db
         download_remote_db(local_gzipped_backup_path)
+
+        # Temporary backup local db
         save_local_db(local_dump_path)
 
         # search and replace some strings in local db
-        run adapt_sql_command(local_dump_path, local_options, remote_options, :vhost)
-        run adapt_sql_command(local_dump_path, local_options, remote_options, :wordpress_path)
+        run adapt_sql_command(local_options, remote_options, :vhost)
+        run adapt_sql_command(local_options, remote_options, :wordpress_path)
 
-        #new dump
+        #dump adapted database
         local_search_replace_dump_path = local_wp_content_dir.path("search_replace_dump.sql")
         local_gzipped_search_replace_dump_path = local_search_replace_dump_path + '.gz'
         save_local_db(local_search_replace_dump_path)
 
-        #import updated local db into remote db
+        #push updated local db to remote db
         run compress_command(local_search_replace_dump_path)
         import_remote_dump(local_gzipped_search_replace_dump_path)
         local_delete(local_gzipped_search_replace_dump_path)
 
-        #restore local db
+        #restore original local db
         run mysql_import_command(local_dump_path, local_options[:database])
         local_delete(local_dump_path)
       end
@@ -44,14 +47,19 @@ module Wordmove
         local_gzipped_dump_path = local_dump_path + '.gz'
         local_backup_path = local_wp_content_dir.path("local-backup-#{Time.now.to_i}.sql")
 
+        # Backup and compress local db
         save_local_db(local_backup_path)
         run compress_command(local_backup_path)
 
+        # Download, uncompress and import remote db
         download_remote_db(local_gzipped_dump_path)
         run uncompress_command(local_gzipped_dump_path)
         run mysql_import_command(local_dump_path, local_options[:database])
-        run adapt_sql_command(local_dump_path, remote_options, local_options, :vhost)
-        run adapt_sql_command(local_dump_path, remote_options, local_options, :wordpress_path)
+
+        # Adapt local db
+        run adapt_sql_command(remote_options, local_options, :vhost)
+        run adapt_sql_command(remote_options, local_options, :wordpress_path)
+
         local_delete(local_dump_path)
       end
 
